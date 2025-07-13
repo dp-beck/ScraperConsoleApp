@@ -3,6 +3,10 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using HtmlAgilityPack;
 using ScraperConsoleApp;
+using Openize.Words;
+using Openize.Words.IElements;
+
+
 // TO DO:
 // 3. Implement outputting to a DOCX file
 
@@ -122,5 +126,44 @@ if (userInput != "exit")
     System.Console.WriteLine("Principal Office: " + company.PrincipalOffice);
     System.Console.WriteLine("Registered Agent: " + company.RegisteredAgent);
     // Add more fields as needed
+
+    // Load the Word Document		
+    var doc = new Document();
+    var body = new Body(doc);
+    var paragraph = new Paragraph();
+
+    var headingRun = new Run
+    {
+        Text = $"Company Profile for {company.Name}",
+        Color = Colors.Gray,
+        Bold = true,
+        Underline = true
+    };
+
+    var detailsRun = new Run
+    {
+        Text = $"\nOrganization Number: {company.OrganizationNumber}\n" +
+               $"Profit or Nonprofit: {company.ProfitOrNonprofit}\n" +
+               $"Company Type: {company.CompanyType}\n" +
+               $"Industry: {company.Industry}\n" +
+               $"Number of Employees: {company.NumberOfEmployees}\n" +
+               $"Primary County: {company.PrimaryCounty}\n" +
+               $"Status: {company.Status}\n" +
+               $"Standing: {company.Standing}\n" +
+               $"State: {company.State}\n" +
+               $"File Date: {company.FileDate}\n" +
+               $"Authority Date: {company.AuthorityDate}\n" +
+               $"Last Annual Report: {company.LastAnnualReport}\n" +
+               $"Principal Office: {company.PrincipalOffice}\n" +
+               $"Registered Agent: {company.RegisteredAgent}\n",
+        Color = Colors.Black
+    };
+
+    paragraph.AddRun(headingRun);
+    paragraph.AddRun(detailsRun);
+    body.AppendChild(paragraph);
+    doc.Save($"test.docx");
+    Console.WriteLine($"Word Document Modified and Saved");
+
 
 }
